@@ -112,7 +112,55 @@ const resolvers = {
       }
     },
     
+    getCityByCoord: async (obj, args, context, info) => {
+      // name is required | country and config are optional
+      const { coord, config } = args;
+      let url = `${WEATHER_API}&lat=${coord[1]}&lon=${coord[0]}`;
+  
+      // // Add other fields if possible
+      if (config && config.units) url = url + `&units=${config.units}`;
+      if (config && config.lang) url = url + `&lang=${config.lang}`;
+  
+      try {
+        const { data } = await axios.get(url);
+  
+
+  
+        return {
+          id: data.id,
+          name: data.name,
+          country: data.sys.country,
+          coord: data.coord,
+          weather: {
+            summary: {
+              title: data.weather[0].main,
+              description: data.weather[0].description,
+              icon: data.weather[0].icon,
+            },
+            temperature: {
+              actual: data.main.temp,
+              feelsLike: data.main.feels_like,
+              min: data.main.temp_min,
+              max: data.main.temp_max,
+            },
+            wind: {
+              speed: data.wind.speed,
+              deg: data.wind.deg,
+            },
+            clouds: {
+              all: data.clouds.all,
+              visibility: data.visibility,
+              humidity: data.main.humidity,
+            },
+            timestamp: data.dt,
+          },
+        };
+      } catch (e) {
+        return null;
+      }
+    },
   },
+
 
 };
 

@@ -53,6 +53,7 @@ const typeDefs = gql`
 
   type Query {
     getCityByName(name: String!, country: String, config: ConfigInput): City
+    getCityByCoord(coord: [Float], config: ConfigInput): City
     getCityById(id: [String!], config: ConfigInput): [City]
   }
 
